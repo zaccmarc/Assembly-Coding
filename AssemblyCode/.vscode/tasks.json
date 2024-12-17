@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Montar e Vincular Assembly",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "nasm -f elf64 /home/zacc-marc/Desktop/Zacc\\ Workspace/computingStudyArticle/AssemblyCode/programa.asm && ld -o programa programa.o && ./programa"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
