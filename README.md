@@ -1,137 +1,135 @@
-# Programa de Soma em Assembly
+# Sum program in Assembly
 
-## Descrição
-Este projeto contém um programa simples escrito em **Assembly** (x86-64, NASM) que realiza a **soma de dois números** e exibe o resultado na tela. O objetivo é demonstrar conceitos básicos de manipulação de dados, chamadas de sistema (**syscalls**) e interação com o sistema operacional.
+## Description
+This project contains a simple program written in **Assembly** (x86-64, NASM) that performs the **sum of two numbers** and displays the result on the screen. The aim is to demonstrate basic concepts of data manipulation, system calls (**syscalls**) and interaction with the operating system.
 
-## Estrutura do Código
-- **soma.asm**: Código fonte em Assembly.
-- **README.md**: Este arquivo de documentação.
+## Code Structure
+- **soma.asm**: Assembly source code.
+- **README.md**: This documentation file.
 
-## Como Compilar e Executar
+## How to Compile and Run
 
-### Requisitos
-- **NASM** (Netwide Assembler): Montador para código Assembly.
-- **LD** (Linker): Utilitário para linkar arquivos objeto.
-- **Sistema Operacional Linux 64 bits**: Ambiente para executar o programa.
+### Requirements
+- **NASM** (Netwide Assembler): Assembler for Assembly code.
+- **LD** (Linker): Utility for linking object files.
+- Linux 64-bit operating system: Environment for running the program.
 
-### Passo a Passo
+### Step by Step
 
-#### 1. Montar o Código Assembly:
-Abra o terminal e navegue até o diretório onde o arquivo `soma.asm` está localizado. Execute o seguinte comando para montar o código Assembly em um arquivo objeto:
+#### 1. Assemble the Assembly Code:
+Open the terminal and navigate to the directory where the `soma.asm` file is located. Run the following command to assemble the assembly code into an object file:
 
 ```bash
 nasm -f elf64 soma.asm -o soma.o
 ```
 
-#### 2. Linkar o Arquivo Objeto:
-Após a montagem bem-sucedida, linke o arquivo objeto para criar o executável:
+#### 2. Link the Object File:
+After successful assembly, link the object file to create the executable:
 
 ```bash
 ld -o soma soma.o
 ```
 
-#### 3. Executar o Programa:
-Execute o programa recém-criado:
+#### 3. Run the Program:
+Run the newly created program:
 
 ```bash
-./soma
+./sum
 ```
+#### Expected output:
+```
+Result: 40
+```
+---
 
-#### Saída Esperada:
-```
-Resultado: 40
-```
+## How it works
+The program performs the following steps:
+
+### 1. Loading the Numbers:
+- Loads two numbers (**num1** and **num2**) defined in the `.data` section into the `rax` and `rbx` registers.
+
+### 2. Sum:
+- Sums the values in `rax` and `rbx`, storing the result in `rax`.
+
+### 3. Storing the Result:
+- Moves the result of the sum to a variable in memory called `result`.
+
+### 4. Printing the Message:
+- Uses the **write** syscall to print the message “Result: ” on the terminal.
+
+### 5. converting the result to a string:
+- Converts the binary number stored in `result` to a decimal string using the `int_to_str` function.
+
+### 6. Printing the Converted Result:
+- Uses the **write** syscall to print the resulting string.
+
+### 7. Adding a New Line:
+- Adds a new line for better formatting of the output.
+
+### 8. Closing the Program:
+- Uses the **exit** syscall to end the program.
 
 ---
 
-## Funcionamento
-O programa realiza as seguintes etapas:
+## Technical Details
 
-### 1. Carregamento dos Números:
-- Carrega dois números (**num1** e **num2**) definidos na seção `.data` para os registradores `rax` e `rbx`.
+### Program sections
+- **.data**: Contains static and initialized data, such as numbers to be summed, text messages and buffers for converting numbers.
+- **.text**: Contains the program's executable code.
+- **.bss**: Reserves space for uninitialized variables (not used directly in this example).
 
-### 2. Soma:
-- Soma os valores em `rax` e `rbx`, armazenando o resultado em `rax`.
+### Functions
+- **_start**: Entry point of the program where the main operations are performed.
+- **int_to_str**: Function that converts an integer into a decimal string.
 
-### 3. Armazenamento do Resultado:
-- Move o resultado da soma para uma variável na memória chamada `resultado`.
-
-### 4. Impressão da Mensagem:
-- Utiliza a syscall **write** para imprimir a mensagem "Resultado: " no terminal.
-
-### 5. Conversão do Resultado para String:
-- Converte o número binário armazenado em `resultado` para uma string decimal usando a função `int_to_str`.
-
-### 6. Impressão do Resultado Convertido:
-- Utiliza a syscall **write** para imprimir a string resultante.
-
-### 7. Adição de Nova Linha:
-- Adiciona uma nova linha para melhor formatação da saída.
-
-### 8. Encerramento do Programa:
-- Utiliza a syscall **exit** para finalizar o programa.
+### Syscalls
+- **sys_write (1)**: Writes data to the specified file descriptor (**stdout**).
+- **sys_exit (60)**: Ends program execution with an exit code.
 
 ---
 
-## Detalhes Técnicos
+## Debugging
+To debug the program, use **GDB** (GNU Debugger):
 
-### Seções do Programa
-- **.data**: Contém dados estáticos e inicializados, como números a serem somados, mensagens de texto e buffers para conversão de números.
-- **.text**: Contém o código executável do programa.
-- **.bss**: Reserva espaço para variáveis não inicializadas (não utilizado diretamente neste exemplo).
-
-### Funções
-- **_start**: Ponto de entrada do programa onde as operações principais são realizadas.
-- **int_to_str**: Função que converte um número inteiro em uma string decimal.
-
-### Chamadas de Sistema (Syscalls)
-- **sys_write (1)**: Escreve dados no descritor de arquivo especificado (**stdout**).
-- **sys_exit (60)**: Finaliza a execução do programa com um código de saída.
-
----
-
-## Depuração
-Para depurar o programa, utilize o **GDB** (GNU Debugger):
-
-#### 1. Instalar o GDB:
+#### 1. Install GDB:
 ```bash
 sudo apt install gdb
 ```
 
-#### 2. Iniciar o GDB com o Executável:
+#### 2. Start GDB with the Executable:
 ```bash
 gdb ./soma
 ```
 
-#### Comandos Úteis do GDB:
-- **break _start**: Define um ponto de interrupção no início do programa.
-- **run**: Executa o programa até o próximo ponto de interrupção.
-- **stepi**: Executa uma instrução Assembly por vez.
-- **print /x $rax**: Imprime o valor do registrador `rax` em hexadecimal.
-- **quit**: Sai do GDB.
+#### Useful GDB commands:
+- **break _start**: Sets a breakpoint at the start of the program.
+- **run**: Runs the program until the next breakpoint.
+- **stepi**: Executes one Assembly statement at a time.
+- **print /x $rax**: Prints the value of the `rax` register in hexadecimal.
+- **quit**: Exits GDB.
 
 ---
 
-## Recursos Adicionais
+## Additional Features
 
-### Documentação do NASM:
+### NASM documentation:
 - [NASM Official Documentation](https://nasm.us/doc/)
 
-### Tutoriais e Livros:
+### Tutorials and Books:
 - *Programming from the Ground Up* - Jonathan Bartlett
-- *The Art of Assembly Language* - Randall Hyde
+- The Art of Assembly Language - Randall Hyde
 
-### Ferramentas de Depuração:
-- **GDB**: Depuração de programas Assembly.
-- **Valgrind**: Verifica o gerenciamento de memória.
+### Debugging tools:
+- **GDB**: Debugging Assembly programs.
+- **Valgrind**: Checks memory management.
 
 ---
 
-## Considerações Finais
-Desenvolver programas em Assembly proporciona um entendimento profundo de como os computadores funcionam a nível fundamental. Este projeto serve como um exemplo introdutório, demonstrando como realizar operações básicas, manipular dados na memória e interagir com o sistema operacional através de chamadas de sistema.
+## Final considerations
+Developing programs in Assembly provides an in-depth understanding of how computers work at a fundamental level. This project serves as an introductory example, demonstrating how to perform basic operations, manipulate data in memory and interact with the operating system through system calls.
 
-### Pontos Chave:
-- **Controle do Hardware**: Assembly permite interagir diretamente com registradores, memória e dispositivos de E/S.
-- **Eficiência**: Programas em Assembly podem ser extremamente eficientes, mas exigem um gerenciamento meticuloso dos recursos.
-- **Complexidade**: A programação em Assembly é mais complexa e propensa a erros comparada a linguagens de alto nível.
-- **Educação**: Estudar Assembly é excelente para aprender sobre a arquitetura de computadores e conceitos de baixo nível.
+### Key Points:
+- Hardware control: Assembly allows you to interact directly with registers, memory and I/O devices.
+- Efficiency: Assembly programs can be extremely efficient, but require meticulous resource management.
+- Complexity: Assembly programming is more complex and error-prone compared to high-level languages.
+- Education**: Studying Assembly is excellent for learning about computer architecture and low-level concepts.
